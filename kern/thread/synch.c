@@ -182,7 +182,7 @@ void lock_destroy(struct lock *lock) {
 
 void lock_acquire(struct lock *lock) {
 	/* Call this (atomically) before waiting for a lock */
-	//HANGMAN_WAIT(&curthread->t_hangman, &lock->lk_hangman);
+	HANGMAN_WAIT(&curthread->t_hangman, &lock->lk_hangman);
 
 	// Write this
 	spinlock_acquire(&lock->lk_spinlock);
@@ -206,15 +206,15 @@ void lock_acquire(struct lock *lock) {
 	}
 	spinlock_release(&lock->lk_spinlock);
 
-	(void)lock;  // suppress warning until code gets written
+	//(void)lock;  // suppress warning until code gets written
 
 	/* Call this (atomically) once the lock is acquired */
-	//HANGMAN_ACQUIRE(&curthread->t_hangman, &lock->lk_hangman);
+	HANGMAN_ACQUIRE(&curthread->t_hangman, &lock->lk_hangman);
 }
 
 void lock_release(struct lock *lock) {
 	/* Call this (atomically) when the lock is released */
-	//HANGMAN_RELEASE(&curthread->t_hangman, &lock->lk_hangman);
+	HANGMAN_RELEASE(&curthread->t_hangman, &lock->lk_hangman);
 
 	// Write this
 	spinlock_acquire(&lock->lk_spinlock);
@@ -225,7 +225,7 @@ void lock_release(struct lock *lock) {
 	}
 	spinlock_release(&lock->lk_spinlock);
 
-	(void)lock;  // suppress warning until code gets written
+	//(void)lock;  // suppress warning until code gets written
 }
 
 bool lock_do_i_hold(struct lock *lock) {
@@ -258,7 +258,13 @@ cv_create(const char *name)
 	}
 
 	// add stuff here as needed
-
+	cv->cv_wchan = wchan_create(cv->cv_name);
+	if (cv->cv_wchan == NULL)
+	{
+		kfree(cv->cv_name);
+		kfree(cv);
+	}
+	
 	return cv;
 }
 
