@@ -241,9 +241,7 @@ bool lock_do_i_hold(struct lock *lock) {
 // CV
 
 
-struct cv *
-cv_create(const char *name)
-{
+struct cv * cv_create(const char *name) {
 	struct cv *cv;
 
 	cv = kmalloc(sizeof(*cv));
@@ -268,9 +266,7 @@ cv_create(const char *name)
 	return cv;
 }
 
-void
-cv_destroy(struct cv *cv)
-{
+void cv_destroy(struct cv *cv) {
 	KASSERT(cv != NULL);
 
 	// add stuff here as needed
@@ -279,9 +275,7 @@ cv_destroy(struct cv *cv)
 	kfree(cv);
 }
 
-void
-cv_wait(struct cv *cv, struct lock *lock)
-{
+void cv_wait(struct cv *cv, struct lock *lock) {
 	// Write this
 	KASSERT( cv != NULL );
 	wchan_lock(cv->cv_wchan);
@@ -292,9 +286,7 @@ cv_wait(struct cv *cv, struct lock *lock)
 	//(void)lock;  // suppress warning until code gets written
 }
 
-void
-cv_signal(struct cv *cv, struct lock *lock)
-{
+void cv_signal(struct cv *cv, struct lock *lock) {
 	// Write this
 	KASSERT( lock_do_i_hold(lock) );
 	wchan_wakeone(cv->cv_wchan);
@@ -303,9 +295,7 @@ cv_signal(struct cv *cv, struct lock *lock)
 	//(void)lock;  // suppress warning until code gets written
 }
 
-void
-cv_broadcast(struct cv *cv, struct lock *lock)
-{
+void cv_broadcast(struct cv *cv, struct lock *lock) {
 	// Write this
 	KASSERT( lock_do_i_hold(lock) );
 	wchan_wakeall(cv->cv_wchan);
