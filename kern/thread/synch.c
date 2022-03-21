@@ -237,7 +237,7 @@ bool lock_do_i_hold(struct lock *lock) {
 	spinlock_acquire(&lock->lk_spinlock);
 
 	//Check if we are the thread that locked this lock.
-	bool result = (curthread == lock->lk_hangman);
+	bool result = (curthread == lock->lk_owner);
 
 	//End Atomic Operation
 	spinlock_release(&lock->lk_spinlock);
