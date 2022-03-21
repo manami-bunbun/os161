@@ -232,7 +232,7 @@ bool lock_do_i_hold(struct lock *lock) {
 	// Write this
 
 	//(void)lock;  // suppress warning until code gets written
-	return lock->lk_hangman == curthread;
+	return lock->lk_hangman == &curthread;
 	//return true; // dummy until code gets written
 }
 
