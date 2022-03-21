@@ -230,9 +230,22 @@ void lock_release(struct lock *lock) {
 
 bool lock_do_i_hold(struct lock *lock) {
 	// Write this
+	KASSERT(lock != NULL);
+	KASSERT(curthread != NULL);
 
+	//Ensure this operation is atomic
+	spinlock_acquire(&lock->lk_spinlock);
+
+	//Check if we are the thread that locked this lock.
+	bool result = (curthread == lock->lk_hangman);
+
+	//End Atomic Operation
+	spinlock_release(&lock->lk_spinlock);
+
+	//Return our result
+	return result;
 	//(void)lock;  // suppress warning until code gets written
-	return lock->lk_hangman == &curthread;
+	//return lock->lk_hangman == curthread;
 	//return true; // dummy until code gets written
 }
 
